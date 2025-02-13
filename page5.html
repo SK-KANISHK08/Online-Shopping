@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oil Categories</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://www.toptal.com/designers/subtlepatterns/patterns/grocery.png');
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .header {
+            padding: 20px 30px;
+            background-color: #327ee1;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .categories-container {
+            padding: 100px 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 6fr));
+            gap: 10px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            background-color: #ebe9e9;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(28, 16, 15, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .category-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 10px 10px rgba(16, 134, 198, 0.3);
+        }
+
+        .category-card img {
+            width: 50%;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            color: #333;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .add-to-cart-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color:       #ffc107;
+            color: #f3f1f1;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #5506af;
+            transform: translateY(-5px);
+        }
+        .cart-summary {
+            position: fixed;
+            top: 100px;
+            right: 0;
+            width: 15%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            height: calc(100% - 100px);
+        }
+
+        .cart-summary h3 {
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cart-item p {
+            margin: 0;
+        }
+
+        .remove-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .remove-btn:hover {
+            background-color: #e60000;
+        }
+
+        .totals {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>Masala & Species</div>
+        <div class="cart-icon" onclick="redirectToBuyPage()">🛒</div>
+    </div>
+
+    <div class="categories-container" id="categoriesContainer"></div>
+
+    <script>
+        const products = [
+        { name: 'Aachi Biryani Masala', price: 50, weight: '100g', img: 'p489.image/masala/biryani.jpg' },
+    { name: 'Aachi Chilli Masala', price: 50, weight: '100g', img: 'p489.image/masala/chilli.jpg' },
+    { name: 'Aachi Garam Masala', price: 70, weight: '100g', img: 'p489.image/masala/garam.jpg' },
+    { name: 'MTR Lemon Powder', price: 40, weight: '100g', img: 'p489.image/masala/Mtr leon.jpg' },
+    { name: 'Aachi Sambar Powder', price: 55, weight: '100g', img: 'p489.image/masala/sambar.jpg' },
+    { name: 'Aachi Idly Powder', price: 50, weight: '100g', img: 'p489.image/masala/idly chilli.jpg' },
+    { name: 'Aachi Mutton Masala', price: 75, weight: '100g', img: 'p489.image/masala/mutton.jpg' },
+    { name: 'Sakthi Egg Masala', price: 65, weight: '100g', img: 'p489.image/masala/sakthi egg.jpg' },
+    { name: 'Aachi Fish Fry Masala', price: 70, weight: '100g', img: 'p489.image/masala/fish.jpg' },
+    { name: 'Aachi Chilli Powder', price: 50, weight: '100g', img: 'p489.image/masala/chilli.jpg' },
+    { name: 'Aachi Chicken Masala', price: 60, weight: '100g', img: 'p489.image/masala/chicken.jpg' },
+    { name: 'Aachi Turmeric Powder', price: 40, weight: '100g', img: 'p489.image/masala/turmeric.jpg' },
+    { name: 'Aachi Coriander Powder', price: 60, weight: '100g', img: 'p489.image/masala/coriander.jpg' },
+    { name: 'Sakthi Chilli Powder', price: 55, weight: '100g', img: 'p489.image/masala/sakthi chilli.jpg' },
+    { name: 'Aachi Pepper Powder', price: 70, weight: '100g', img: 'p489.image/masala/pepper.jpg' },
+    { name: 'Sakthi Coriander Powder', price: 60, weight: '100g', img: 'p489.image/masala/sakthi coriander.jpg' }
+        ];
+
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function addToCart(productName, price) {
+    const existingItem = cart.find(item => item.name === productName);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ name: productName, price, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+
+        function renderProducts() {
+            const container = document.getElementById('categoriesContainer');
+            products.forEach(product => {
+                container.innerHTML += `
+                    <div class="category-card">
+                        <img src="${product.img}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p class="price">₹${product.price}</p>
+                        <button onclick="addToCart('${product.name}', ${product.price})">Add to Cart</button>
+                    </div>
+                `;
+            });
+        }
+
+        function redirectToBuyPage() {
+            window.location.href = 'buy.html';
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>
